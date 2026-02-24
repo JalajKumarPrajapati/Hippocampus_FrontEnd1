@@ -16,17 +16,24 @@ export function Card({ title, link, type,_id,refresh }: CardProps) {
     const [loading,isloading] = useState(false)
     
     async function deletedata(){
-        isloading(true)
-        
-        await axios.delete(`http://localhost:3001/api/v1/content`,{
-            data: { contentId: _id },
-            headers:{ "autherization": localStorage.getItem("token")}
-        })
-        await new Promise((resolve) => {
-  setTimeout(resolve, 5000);
-});
-        refresh()
-        isloading(false)
+        try {
+    isloading(true)
+
+    // React repaint just for testing
+    await new Promise(resolve => setTimeout(resolve, 500))
+
+    await axios.delete(`http://localhost:3001/api/v1/content`, {
+      data: { contentId: _id },
+      headers: { autherization: localStorage.getItem("token") }
+    })
+
+    refresh()
+
+  } catch (err) {
+    console.error(err)
+  } finally {
+    isloading(false)
+  }
     }
 
     return <div>
@@ -43,7 +50,7 @@ export function Card({ title, link, type,_id,refresh }: CardProps) {
                 <div className="flex items-center text-gray-500">
                     <div className="pr-2"> 
                         <button onClick={()=>deletedata()} className="cursor-pointer">
-                            {loading?<DeleteIcon></DeleteIcon>:<LoadingIcon></LoadingIcon> }
+                            {loading?<LoadingIcon/>:<DeleteIcon></DeleteIcon> }
                         
                         </button>
                             
