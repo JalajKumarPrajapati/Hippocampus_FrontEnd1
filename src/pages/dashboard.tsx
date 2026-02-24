@@ -5,7 +5,6 @@ import { Card } from '../components/Card'
 import { CreateContentModel } from '../components/CreateContentModel'
 import { Shareicon } from '../icons/Shareicon'
 import { Plusicon } from '../icons/Plusicon'
-
 import { useContent } from '../hooks/useContent'
 import landingImg from '../img/landing.png';
 function Dashboard() {
@@ -34,7 +33,7 @@ function Dashboard() {
           <Button variant="primary" onclick={() => { SetModelOpen(true) }} text="Add   " startIcon={<Plusicon />}></Button>
         </div>
         <div className="flex gap-4 flex-wrap">
-          {contents.map(({type,link,title})=><Card title={title} link={link} type={type}></Card>)}
+          {contents.map(({type,link,title,_id})=><Card title={title} link={link} type={type} _id={_id} refresh={refresh}></Card>)}
         </div>
       </div>
     </div>

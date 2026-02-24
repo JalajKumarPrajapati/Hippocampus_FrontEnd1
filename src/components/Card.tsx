@@ -1,13 +1,34 @@
 import { Shareicon } from "../icons/Shareicon";
 import { TwitterIcon } from "../icons/TwitterIcon";
 import { YoutubeIcon } from "../icons/YoutuneIcon";
-import { DeleteIcon } from '../icons/DeleteIcon'
+import { DeleteIcon } from '../icons/DeleteIcon';
+import {useState} from 'react'
+import {LoadingIcon} from "../icons/Loading";
+import axios from "axios";
 interface CardProps {
     title: string;
     link: string;
     type: "twitter" | "youtube";
+    _id:string;
+    refresh:()=>void;
 }
-export function Card({ title, link, type }: CardProps) {
+export function Card({ title, link, type,_id,refresh }: CardProps) {
+    const [loading,isloading] = useState(false)
+    
+    async function deletedata(){
+        isloading(true)
+        
+        await axios.delete(`http://localhost:3001/api/v1/content`,{
+            data: { contentId: _id },
+            headers:{ "autherization": localStorage.getItem("token")}
+        })
+        await new Promise((resolve) => {
+  setTimeout(resolve, 5000);
+});
+        refresh()
+        isloading(false)
+    }
+
     return <div>
         <div className="p-4 bg-white rounded shadow-md border-slate-200 border max-w-72 min-h-48 min-w-72">
             <div className="flex justify-between">
@@ -21,7 +42,11 @@ export function Card({ title, link, type }: CardProps) {
                 </div>
                 <div className="flex items-center text-gray-500">
                     <div className="pr-2"> 
-                            <DeleteIcon />
+                        <button onClick={()=>deletedata()} className="cursor-pointer">
+                            {loading?<DeleteIcon></DeleteIcon>:<LoadingIcon></LoadingIcon> }
+                        
+                        </button>
+                            
                     </div>
                     <div>
                         <Shareicon />
