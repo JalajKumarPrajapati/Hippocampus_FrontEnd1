@@ -7,6 +7,7 @@ export function useContent(){
         axios.get(`${BACKEND_URL}/api/v1/content`,{
             headers:{ "autherization": localStorage.getItem("token")}
         }).then(response=>{
+            console.log("Netwrok called")
             console.log(response.data.content)
             setContent(response.data.content)
         })
