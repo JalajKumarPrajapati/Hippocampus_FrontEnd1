@@ -1,7 +1,7 @@
 import {Closeicon} from '../icons/Closeicon'
 import { Button } from './Button';
 import { Input } from './Input';
-import {useRef,useState} from 'react';
+import {useRef} from 'react';
 import axios from 'axios';
 interface CreateContentModelProps{
     ModelOpen: boolean;
