@@ -27,10 +27,10 @@ export function Sidebar({ setType, selectedType }: { setType: (type: string) => 
             <Sidebaritem setType={setType} label="Linkedin" text="linkedin" icon={<LinkedinIcon></LinkedinIcon>} active={selectedType === "linkedin"} />
         </div>
         <div className="absolute bottom-3">
-            <button onClick={()=>logout()}className="cursor-pointer">
+            <button onClick={()=>logout()} className="cursor-pointer">
             <div className="flex items-center text-gray-500">
                 <div className="p-2">
-                    <LogoOutIcon></LogoOutIcon>
+                    <LogoOutIcon />
                 </div>
                 <div className="p-2">Log Out</div>
             </div>
