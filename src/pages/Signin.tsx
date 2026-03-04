@@ -5,16 +5,20 @@ import { BACKEND_URL } from "../config"
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom"
 import landingImg from '../img/landing.png';
+import { LoadingIcon } from "../icons/Loading";
 import { Hippo } from '../icons/Hippo';
 import toast from "react-hot-toast";
 import axios from 'axios'
 export function Signin(){
     const usernameRef = useRef<HTMLInputElement | null>(null);
     const passwordRef = useRef<HTMLInputElement | null>(null);
+    const [loading, setLoading] = useState(false);
     const [show, setShow] = useState(false);
     const navigate=useNavigate();
 
     async function signin(): Promise<void> {
+        setLoading(true)
+        await new Promise(resolve => setTimeout(resolve, 200))
         const username = usernameRef.current?.value;
         const password = passwordRef.current?.value;
         try {
@@ -27,12 +31,15 @@ export function Signin(){
             if (jwt) localStorage.setItem("token", jwt);
              toast.success(respones?.data?.message || "Login Success");
             navigate("/dashboard")
+            setLoading(false)
 
         } catch (error:any) {
             if (error.response) {
                 toast.error(error.response?.data?.message || "Login failed");
+                setLoading(false)
             } else {
                 alert("Network error");
+                setLoading(false)
             }
         }
     }
@@ -62,7 +69,7 @@ export function Signin(){
                         </button></div>
                     </div>
                     <div className="flex justify-center pt-4 min-w-48 p-8 rounded">
-                        <Button onclick={signin} variant='primary' text='Login' fullWidth={true} loading={false}></Button>
+                        {loading?<LoadingIcon></LoadingIcon>:<Button onclick={signin} variant='primary' text='Login' fullWidth={true} loading={false}></Button>}
                     </div>
                 </div>
             </div>

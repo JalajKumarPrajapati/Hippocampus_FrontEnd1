@@ -21,8 +21,10 @@ interface CardProps {
     type: "twitter" | "youtube" | "googlemap" | "linkedin";
     _id: string;
     refresh: () => void;
+    setOpen: (value: boolean) => void;
+    setUrl: (value: string) => void;
 }
-export function Card({ title, link, type, _id, refresh }: CardProps) {
+export function Card({ title, link, type, _id, refresh, setOpen ,setUrl}: CardProps) {
     const [loading, isloading] = useState(false)
  useEffect(() => {
   if (type === "twitter" && window.twttr) {
@@ -35,7 +37,7 @@ export function Card({ title, link, type, _id, refresh }: CardProps) {
             isloading(true)
 
             // React repaint just for testing
-            await new Promise(resolve => setTimeout(resolve, 500))
+            await new Promise(resolve => setTimeout(resolve, 200))
 
             await axios.delete(`http://localhost:3001/api/v1/content`, {
                 data: { contentId: _id },
@@ -52,36 +54,32 @@ export function Card({ title, link, type, _id, refresh }: CardProps) {
     }
 
     return <div>
-        <div className="p-4 bg-white rounded shadow-md border-slate-200 border max-w-72 min-h-48 min-w-72">
-            <div className="flex justify-between">
-                <div className="flex items-center text-md text-md">
-                    <div className="flex text-gray-500 pr-2">
-                        <a href={link} target="_blank">
-                            {type === "twitter" &&<TwitterIcon />}
-                            {type === "youtube" &&<YoutubeIcon />}
-                            {type === "linkedin" &&<LinkedinIcon />}
-                            {type === "googlemap" &&<GoogleMapIcon />}
-                        </a>
-                    </div>
-                    {title}
+        <div className="p-2 sm:p-4 bg-white rounded shadow-md border-slate-200 border w-full h-58 overflow-hidden flex flex-col">
+            <div className="flex justify-between items-start gap-2">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                    <a href={link} target="_blank" className="flex-shrink-0 text-gray-500 hover:text-gray-700">
+                        {type === "twitter" && <TwitterIcon />}
+                        {type === "youtube" && <YoutubeIcon />}
+                        {type === "linkedin" && <LinkedinIcon />}
+                        {type === "googlemap" && <GoogleMapIcon />}
+                    </a>
+                    <span className="text-sm sm:text-base font-medium text-gray-800 truncate">{title}</span>
                 </div>
-                <div className="flex items-center text-gray-500">
-                    <div className="pr-2">
-                        <button onClick={() => deletedata()} className="cursor-pointer">
-                            {loading ? <LoadingIcon /> : <DeleteIcon></DeleteIcon>}
-
-                        </button>
-
-                    </div>
-                    <div>
-                        
+                <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0 text-gray-500">
+                    <button onClick={() => deletedata()} className="cursor-pointer hover:text-red-600 transition-colors">
+                        {loading ? <LoadingIcon /> : <DeleteIcon></DeleteIcon>}
+                    </button>
+                    <button onClick={() => {
+                        setUrl(link);
+                        setOpen(true);
+                    }} className="cursor-pointer hover:text-blue-600 transition-colors">
                         <Shareicon />
-                    </div>
+                    </button>
                 </div>
 
 
             </div>
-            <div className="pt-4">
+            <div className="pt-4 flex-1 overflow-auto">
                 {type === "youtube" && (() => {
                     const url = new URL(link);
                     const videoId = url.searchParams.get("v");
@@ -97,13 +95,13 @@ export function Card({ title, link, type, _id, refresh }: CardProps) {
                         />
                     );
                 })()}
-                {/* {type==="youtube" &&<iframe className="w-full" src={link.replace("watch","embed").replace("?v=","/")} title="YouTube video player"  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>}               */}
+        
                 {type === "twitter" && (
-                    <>
-                        <blockquote className="twitter-tweet">
+                    <div className="max-w-full">
+                        <blockquote className="twitter-tweet" data-width="250">
                             <a href={link.replace("x.com", "twitter.com")}></a>
                         </blockquote>
-                    </>
+                    </div>
                 )}
                 {type === "googlemap" && (() => {
                     const match = link.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*)/);
@@ -131,13 +129,11 @@ export function Card({ title, link, type, _id, refresh }: CardProps) {
 
                     return (
                         <iframe
-                            className="w-full"
+                            className="w-full h-full"
                             src={`https://www.linkedin.com/embed/feed/update/urn:li:share:${shareId}`}
-                            height="600"
                             frameBorder="0"
                             allowFullScreen
                             title="LinkedIn Post"
-                            style={{ borderRadius: "8px" }}
                         />
                     );
                 })()}

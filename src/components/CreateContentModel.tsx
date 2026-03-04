@@ -45,8 +45,8 @@ export function CreateContentModel({ModelOpen,SetModelOpen}:CreateContentModelPr
     }
 
     return <div>
-    {ModelOpen && <div className="w-screen h-screen bg-slate-500 fixed top-0 left-0 bg-slate-500/60 flex justify-center">
-    <div className="flex flex-col justify-center">
+    {ModelOpen && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div className="flex flex-col ">
         <span className="bg-white opacity-100 p-4 rounded">
             <div className="flex justify-end">
                 <div onClick={SetModelOpen} className="cursor-pointer">
