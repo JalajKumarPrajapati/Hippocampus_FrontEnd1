@@ -1,1 +1,1 @@
-export const BACKEND_URL="http://localhost:3001"
+export const BACKEND_URL="https://hippocampus-backend-24o3.onrender.com"

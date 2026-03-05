@@ -3,6 +3,7 @@ import { Button } from './Button';
 import { Input } from './Input';
 import {useRef} from 'react';
 import axios from 'axios';
+import { BACKEND_URL } from '../config';
 interface CreateContentModelProps{
     ModelOpen: boolean;
     SetModelOpen: ()=>void;
@@ -33,7 +34,7 @@ export function CreateContentModel({ModelOpen,SetModelOpen}:CreateContentModelPr
         const type =detectType(link || "")
         console.log(type)
         const title = titleRef.current?.value;
-        await axios.post("http://localhost:3001/api/v1/content", {
+        await axios.post(`${BACKEND_URL}/api/v1/content`, {
             link,
             type,
             title

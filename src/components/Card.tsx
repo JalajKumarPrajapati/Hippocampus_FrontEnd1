@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { useEffect } from "react";
 import { LoadingIcon } from "../icons/Loading";
 import axios from "axios";
+import { BACKEND_URL } from '../config';
 
 declare global {
   interface Window {
@@ -39,7 +40,7 @@ export function Card({ title, link, type, _id, refresh, setOpen ,setUrl}: CardPr
             // React repaint just for testing
             await new Promise(resolve => setTimeout(resolve, 200))
 
-            await axios.delete(`http://localhost:3001/api/v1/content`, {
+            await axios.delete(`${BACKEND_URL}/api/v1/content`, {
                 data: { contentId: _id },
                 headers: { autherization: localStorage.getItem("token") }
             })
